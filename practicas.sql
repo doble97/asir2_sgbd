@@ -337,6 +337,8 @@ end//
 delimiter ;
 
 --- 4.3
+use ventasleon;
+drop procedure if exists genera_fechas_en;
 delimiter //
 create procedure genera_fechas_en(in dias int)
 begin
@@ -344,7 +346,6 @@ begin
    drop table if exists fechas_en;
    create table fechas_en(Id int primary key auto_increment,
       Fecha date, Nombre varchar(10), NumDia int);
-
    bucle: LOOP
       if contador =dias then LEAVE bucle;
       end if;
@@ -353,8 +354,10 @@ begin
          date_format( date_add(curdate(), interval contador day),'%j' ));
          set contador = contador +1;
    end loop bucle;
-end//
+   select * from fechas_en;
+end //
 delimiter ;
+call genera_fechas_en(5);
 
 --- 5.1 Dado un número, saca una lista con todos los números inferiores a él que son divisibles por 8. Por ejemplo,
 --- si el número pasado como parámetro es el 32, nos deberá devolver lo siguiente: 24|16|8|.

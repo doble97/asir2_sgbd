@@ -1,3 +1,38 @@
+--1
+use ventasleon;
+drop trigger if exists mayor200;
+delimiter //
+create trigger mayor200 before insert on productos
+for each row
+begin
+	if new.precio <200 then
+		set new.precio = 200;
+	end if;
+end//
+delimiter ;
+delete from productos where producto_no in (34,35);
+INSERT INTO `ventasleon`.`productos`
+(producto_no, descripcion,precio,stock)
+VALUES
+( 34,'lapiz',43,2),( 35,'móvil',235,2);
+select * from ventasleon.productos;
+--2
+use ebanca;
+select * from cuenta;
+drop table if exists nrojos;
+create table nrojos(cliente int primary key, cuenta int, fecha date, saldo int);
+delimiter //
+create trigger ejercicio2 after update on cuenta
+for each row
+	begin
+		if new.saldo<0 then
+			insert into nrojos values(new.cod_cliente, new.cod_cuenta, curdate(), new.saldo);
+		end if;
+    end//
+delimiter ;
+UPDATE cuenta SET saldo=saldo-200 WHERE  cod_cuenta <3;
+select * from nrojos;
+
 --3.Haz lo necesario para cada vez que hay un movimiento  se actualice el saldo de la cuenta de ese cliente con ese movimiento, ya se un ingreso o una retirada.
 use ebanca;
 drop trigger if exists ejercicio3;
